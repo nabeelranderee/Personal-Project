@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nabeel & Zaina · Date Plans</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Caveat:wght@400;500&display=swap" rel="stylesheet">
-<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/index.min.js"></script>
 <style>
   :root {
     --bg: #FBF8F4;
@@ -1178,10 +1178,13 @@
 </div>
 
 <script>
-  // Initialize EmailJS
-  if (typeof emailjs !== 'undefined') {
-    emailjs.init('bj12ZqpZ-n2sKlxlQ');
-  }
+  // Initialize EmailJS after a short delay to ensure library is loaded
+  window.addEventListener('load', function() {
+    if (typeof emailjs !== 'undefined') {
+      emailjs.init('bj12ZqpZ-n2sKlxlQ');
+      console.log('EmailJS initialized');
+    }
+  });
 
   const loved = new Set();
   let userName = 'You';
@@ -1223,6 +1226,7 @@
   function submitName() {
     const input = document.getElementById('nameInput').value.trim();
     userName = input || 'You';
+    console.log('Name submitted:', userName);
     applyName(userName);
     const gate = document.getElementById('nameGate');
     gate.classList.add('fade-out');
