@@ -1179,7 +1179,9 @@
 
 <script>
   // Initialize EmailJS
-  emailjs.init('bj12ZqpZ-n2sKlxlQ');
+  if (typeof emailjs !== 'undefined') {
+    emailjs.init('bj12ZqpZ-n2sKlxlQ');
+  }
 
   const loved = new Set();
   let userName = 'You';
@@ -1342,6 +1344,12 @@
   }
 
   function sendEmailPicks() {
+    // Check if EmailJS is available
+    if (typeof emailjs === 'undefined') {
+      console.warn('EmailJS not loaded, skipping email send');
+      return;
+    }
+
     // Build the picks list HTML
     const picksList = [...loved]
       .sort((a, b) => +a - +b)
