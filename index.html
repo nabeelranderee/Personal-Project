@@ -1171,7 +1171,10 @@
       <p class="modal-intro">Here are your favourites.<br>Screenshot this and send it to Nabeel. 📸</p>
       <div class="modal-list" id="modalList"></div>
       <p class="modal-footer-note" id="modalFooterNote">He will pretend to be surprised. He won't be.</p>
-      <button class="modal-close" onclick="closeModal()">Done 🤍</button>
+      <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+        <button class="modal-close" onclick="downloadPicks()" style="background: var(--rose); color: #fff; flex: 1;">Download Picks 📥</button>
+        <button class="modal-close" onclick="closeModal()" style="flex: 1;">Done 🤍</button>
+      </div>
     </div>
   </div>
 </div>
@@ -1337,6 +1340,38 @@
   function closeModal() {
     document.getElementById('overlay').classList.remove('open');
     document.body.style.overflow = '';
+  }
+
+  function downloadPicks() {
+    if (loved.size === 0) return;
+    
+    const picks = [];
+    [...loved].sort((a, b) => +a - +b).forEach(id => {
+      const card = document.querySelector(`.card[data-id="${id}"]`);
+      picks.push({
+        number: String(id).padStart(2, '0'),
+        emoji: card.dataset.emoji,
+        title: card.dataset.title
+      });
+    });
+
+    const data = {
+      name: userName,
+      submittedAt: new Date().toISOString(),
+      datePicks: picks,
+      totalPicks: picks.length
+    };
+
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${userName}-date-picks-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   }
 </script>
 </body>
